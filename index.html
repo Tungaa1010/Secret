@@ -1,997 +1,1305 @@
 <!DOCTYPE html>
 <html lang="mn">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌸 Манай Дэвтэр</title>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Gaegu:wght@300;400;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --mom: #e8789a;
-  --mom-l: #fde8f0;
-  --mom-d: #b84a6a;
-  --kid: #5ec4e0;
-  --kid-l: #dff4fb;
-  --kid-d: #2a8aaa;
-  --gold: #f5c842;
-  --bg: #faf6f0;
-  --paper: #fffef9;
-  --ink: #3a2030;
-}
-
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-  font-family: 'Caveat', cursive;
-  background: var(--bg);
-  min-height: 100vh;
-  background-image:
-    radial-gradient(ellipse at 10% 10%, #fde8f055 0%, transparent 50%),
-    radial-gradient(ellipse at 90% 90%, #dff4fb55 0%, transparent 50%);
-}
-
-/* ========= LOGIN ========= */
-#login {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2.5rem;
-  padding: 2rem;
-}
-
-.login-logo {
-  font-size: 4rem;
-  animation: sway 3s ease-in-out infinite;
-}
-
-@keyframes sway {
-  0%,100% { transform: rotate(-5deg); }
-  50% { transform: rotate(5deg); }
-}
-
-.login-h {
-  font-family: 'Gaegu', cursive;
-  font-size: 2.8rem;
-  color: var(--mom-d);
-  text-align: center;
-  line-height: 1.2;
-}
-
-.login-sub {
-  font-size: 1.2rem;
-  color: #a07080;
-  text-align: center;
-  margin-top: -1.5rem;
-}
-
-.user-cards {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.u-card {
-  width: 160px;
-  padding: 2rem 1rem;
-  border-radius: 28px;
-  text-align: center;
-  cursor: pointer;
-  border: 3px solid transparent;
-  transition: all .3s cubic-bezier(.34,1.56,.64,1);
-  position: relative;
-}
-
-.u-card.mom { background: var(--mom-l); border-color: var(--mom); box-shadow: 0 8px 24px #e8789a33; }
-.u-card.kid { background: var(--kid-l); border-color: var(--kid); box-shadow: 0 8px 24px #5ec4e033; }
-.u-card:hover { transform: translateY(-10px) scale(1.04); }
-
-.u-avatar { font-size: 3.5rem; display: block; margin-bottom: .5rem; }
-.u-name { font-size: 1.8rem; font-weight: 700; color: var(--ink); }
-.u-sub { font-size: 1rem; color: #a07080; margin-top: .2rem; }
-.u-card.kid .u-sub { color: #4a8aaa; }
-
-/* ========= APP SHELL ========= */
-#app { display: none; flex-direction: column; min-height: 100vh; }
-
-header {
-  background: var(--paper);
-  border-bottom: 2px dashed #e8c8d4;
-  padding: .8rem 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 4px 16px #e8789a11;
-}
-
-.h-left { display: flex; align-items: center; gap: 1rem; }
-
-.app-title {
-  font-family: 'Gaegu', cursive;
-  font-size: 1.8rem;
-  color: var(--mom-d);
-}
-
-.badge {
-  padding: .3rem 1rem;
-  border-radius: 50px;
-  font-size: 1.05rem;
-  font-weight: 700;
-}
-
-.badge.mom { background: var(--mom-l); color: var(--mom-d); border: 2px solid var(--mom); }
-.badge.kid { background: var(--kid-l); color: var(--kid-d); border: 2px solid var(--kid); }
-
-.btn {
-  padding: .45rem 1.1rem;
-  border-radius: 50px;
-  border: none;
-  cursor: pointer;
-  font-family: 'Caveat', cursive;
-  font-size: 1rem;
-  font-weight: 600;
-  transition: all .2s;
-}
-
-.btn-out { background: transparent; color: #a07080; border: 2px dashed #e0b0c0; }
-.btn-out:hover { background: var(--mom-l); }
-
-/* NAV TABS */
-nav {
-  background: var(--paper);
-  border-bottom: 2px dashed #e8c8d4;
-  display: flex;
-  overflow-x: auto;
-}
-
-.tab {
-  padding: .9rem 1.5rem;
-  cursor: pointer;
-  font-family: 'Caveat', cursive;
-  font-size: 1.1rem;
-  color: #b09090;
-  border: none;
-  border-bottom: 3px solid transparent;
-  background: none;
-  white-space: nowrap;
-  transition: all .2s;
-}
-
-.tab:hover { color: var(--mom-d); }
-.tab.on { color: var(--mom-d); border-bottom-color: var(--mom); font-weight: 700; }
-.tab.on.kid-mode { color: var(--kid-d); border-bottom-color: var(--kid); }
-
-/* ========= SECTIONS ========= */
-.section { display: none; padding: 1.5rem; }
-.section.visible { display: block; }
-
-.sec-title {
-  font-family: 'Gaegu', cursive;
-  font-size: 2rem;
-  color: var(--ink);
-  margin-bottom: 1.2rem;
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-}
-
-/* ========= PLAN SECTION ========= */
-.plan-date-nav {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.date-btn {
-  background: var(--mom-l);
-  border: 2px solid var(--mom);
-  color: var(--mom-d);
-  padding: .3rem .9rem;
-  border-radius: 50px;
-  font-family: 'Caveat', cursive;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all .2s;
-}
-
-.date-btn:hover { background: var(--mom); color: white; }
-.date-btn.kid-mode { background: var(--kid-l); border-color: var(--kid); color: var(--kid-d); }
-.date-btn.kid-mode:hover { background: var(--kid); color: white; }
-
-.date-label {
-  font-size: 1.3rem;
-  color: var(--ink);
-  font-weight: 700;
-}
-
-.plan-card {
-  background: var(--paper);
-  border-radius: 20px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 20px #e8789a18;
-  border: 2px solid #f5d8e4;
-  max-width: 600px;
-}
-
-.plan-progress {
-  margin-bottom: 1.2rem;
-}
-
-.progress-label {
-  display: flex;
-  justify-content: space-between;
-  font-size: 1rem;
-  color: #a07080;
-  margin-bottom: .4rem;
-}
-
-.progress-bar {
-  height: 12px;
-  background: #f0d8e8;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--mom), #f5a0c0);
-  border-radius: 10px;
-  transition: width .5s ease;
-}
-
-.progress-fill.kid-fill { background: linear-gradient(90deg, var(--kid), #8adcf0); }
-
-.task-add-row {
-  display: flex;
-  gap: .6rem;
-  margin-bottom: 1rem;
-}
-
-.task-input {
-  flex: 1;
-  padding: .6rem 1rem;
-  border: 2px dashed #e8c0d0;
-  border-radius: 50px;
-  font-family: 'Caveat', cursive;
-  font-size: 1.1rem;
-  color: var(--ink);
-  background: #fff9fb;
-  outline: none;
-}
-
-.task-input:focus { border-color: var(--mom); border-style: solid; }
-.task-input.kid-inp { border-color: #b0dcea; background: #f5fbff; }
-.task-input.kid-inp:focus { border-color: var(--kid); }
-
-.btn-task-add {
-  background: var(--mom);
-  color: white;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  font-size: 1.4rem;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: all .2s;
-  display: flex; align-items: center; justify-content: center;
-}
-
-.btn-task-add:hover { transform: scale(1.1); background: var(--mom-d); }
-.btn-task-add.kid-mode { background: var(--kid); }
-.btn-task-add.kid-mode:hover { background: var(--kid-d); }
-
-.task-list { display: flex; flex-direction: column; gap: .5rem; }
-
-.task-item {
-  display: flex;
-  align-items: center;
-  gap: .8rem;
-  padding: .6rem .8rem;
-  border-radius: 12px;
-  background: #fff5f8;
-  transition: all .2s;
-}
-
-.task-item.done { background: #f0fff4; opacity: .7; }
-.task-item.kid-task { background: #f0f9ff; }
-.task-item.done.kid-task { background: #e8fff0; }
-
-.task-check {
-  width: 26px; height: 26px;
-  border-radius: 50%;
-  border: 2px solid var(--mom);
-  background: white;
-  cursor: pointer;
-  flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem;
-  transition: all .3s cubic-bezier(.34,1.56,.64,1);
-}
-
-.task-check.checked { background: var(--mom); border-color: var(--mom); }
-.task-check.kid-chk { border-color: var(--kid); }
-.task-check.checked.kid-chk { background: var(--kid); border-color: var(--kid); }
-
-.task-text {
-  flex: 1;
-  font-size: 1.15rem;
-  color: var(--ink);
-  transition: all .2s;
-}
-
-.task-item.done .task-text {
-  text-decoration: line-through;
-  color: #b09090;
-}
-
-.task-del {
-  background: none;
-  border: none;
-  color: #d08090;
-  font-size: 1rem;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity .2s;
-}
-
-.task-item:hover .task-del { opacity: .6; }
-.task-del:hover { opacity: 1 !important; }
-
-/* STICKER REWARD */
-.sticker-reward {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(50,20,30,.5);
-  backdrop-filter: blur(6px);
-  z-index: 300;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.sticker-reward.show { display: flex; }
-
-.reward-box {
-  background: var(--paper);
-  border-radius: 28px;
-  padding: 3rem 2.5rem;
-  text-align: center;
-  box-shadow: 0 24px 60px rgba(80,20,40,.3);
-  animation: popBounce .5s cubic-bezier(.34,1.56,.64,1);
-  max-width: 340px;
-}
-
-@keyframes popBounce {
-  0% { transform: scale(0) rotate(-10deg); }
-  100% { transform: scale(1) rotate(0); }
-}
-
-.reward-sticker {
-  font-size: 5rem;
-  display: block;
-  animation: spin1 .6s ease;
-}
-
-@keyframes spin1 {
-  0% { transform: rotate(-180deg) scale(0); }
-  100% { transform: rotate(0) scale(1); }
-}
-
-.reward-title {
-  font-family: 'Gaegu', cursive;
-  font-size: 2rem;
-  color: var(--mom-d);
-  margin: .5rem 0;
-}
-
-.reward-sub { font-size: 1.1rem; color: #a07080; }
-
-.sticker-collection {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .4rem;
-  margin-top: 1rem;
-  padding: 1rem;
-  background: var(--mom-l);
-  border-radius: 16px;
-  min-height: 60px;
-  justify-content: center;
-}
-
-.sticker-item { font-size: 1.8rem; cursor: default; }
-
-.sticker-count-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: .3rem;
-  background: var(--gold);
-  padding: .2rem .8rem;
-  border-radius: 50px;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #5a3a00;
-  margin-top: .5rem;
-}
-
-/* ========= LETTERS SECTION ========= */
-.letters-intro {
-  font-size: 1.1rem;
-  color: #a07080;
-  margin-bottom: 1.5rem;
-  background: var(--mom-l);
-  padding: .8rem 1.2rem;
-  border-radius: 14px;
-  border-left: 4px solid var(--mom);
-}
-
-.letters-intro.kid-intro { background: var(--kid-l); border-left-color: var(--kid); color: #4a8aaa; }
-
-.letters-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1.2rem;
-}
-
-.letter-card {
-  background: var(--paper);
-  border-radius: 18px;
-  padding: 1.2rem;
-  border: 2px dashed #e8c8d4;
-  cursor: pointer;
-  transition: all .2s;
-  position: relative;
-  overflow: hidden;
-}
-
-.letter-card::before {
-  content: '🔒';
-  position: absolute;
-  right: 10px; top: 8px;
-  font-size: 1rem;
-  opacity: .5;
-}
-
-.letter-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px #e8789a22; }
-
-.letter-from { font-size: .9rem; color: #b09090; margin-bottom: .3rem; }
-.letter-preview {
-  font-size: 1.1rem;
-  color: var(--ink);
-  filter: blur(4px);
-  user-select: none;
-  line-height: 1.4;
-}
-
-.letter-card.mine .letter-preview { filter: none; }
-.letter-card.mine::before { content: '✉️'; }
-
-.letter-date { font-size: .85rem; color: #c0a0b0; margin-top: .5rem; }
-
-.new-letter-btn {
-  margin-bottom: 1.2rem;
-  background: var(--mom);
-  color: white;
-  padding: .6rem 1.4rem;
-  font-size: 1.1rem;
-  box-shadow: 0 4px 14px #e8789a44;
-}
-
-.new-letter-btn:hover { background: var(--mom-d); transform: scale(1.03); }
-.new-letter-btn.kid-mode { background: var(--kid); box-shadow: 0 4px 14px #5ec4e044; }
-.new-letter-btn.kid-mode:hover { background: var(--kid-d); }
-
-/* ========= MEMORIES SECTION ========= */
-.memories-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.5rem;
-}
-
-.memory-card {
-  background: var(--paper);
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 4px 18px #e8789a18;
-  border: 2px solid #f5d8e4;
-  transition: all .2s;
-}
-
-.memory-card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px #e8789a28; }
-
-.memory-img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  background: #f0e8f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
-}
-
-.memory-img img { width: 100%; height: 100%; object-fit: cover; }
-
-.memory-body { padding: 1rem; }
-.memory-text { font-size: 1.1rem; color: var(--ink); line-height: 1.4; }
-.memory-meta {
-  display: flex;
-  justify-content: space-between;
-  margin-top: .5rem;
-  font-size: .85rem;
-  color: #b09090;
-}
-
-.add-memory-btn {
-  background: var(--mom);
-  color: white;
-  padding: .6rem 1.4rem;
-  font-size: 1.1rem;
-  margin-bottom: 1.2rem;
-  box-shadow: 0 4px 14px #e8789a44;
-}
-
-.add-memory-btn:hover { background: var(--mom-d); transform: scale(1.03); }
-.add-memory-btn.kid-mode { background: var(--kid); }
-.add-memory-btn.kid-mode:hover { background: var(--kid-d); }
-
-/* ========= MODAL ========= */
-.overlay {
-  display: none;
-  position: fixed; inset: 0;
-  background: rgba(50,20,30,.4);
-  backdrop-filter: blur(5px);
-  z-index: 200;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
-
-.overlay.open { display: flex; }
-
-.modal {
-  background: var(--paper);
-  border-radius: 24px;
-  padding: 2rem;
-  width: 100%;
-  max-width: 440px;
-  box-shadow: 0 24px 60px rgba(80,20,40,.25);
-  animation: popIn .3s cubic-bezier(.34,1.56,.64,1);
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-@keyframes popIn { from { transform: scale(.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-.modal h3 {
-  font-family: 'Gaegu', cursive;
-  font-size: 1.8rem;
-  color: var(--ink);
-  margin-bottom: 1.2rem;
-}
-
-.field { margin-bottom: 1rem; }
-.field label { display: block; font-size: 1rem; color: #a07080; margin-bottom: .3rem; }
-
-.field textarea, .field input[type=text] {
-  width: 100%;
-  padding: .7rem 1rem;
-  border: 2px dashed #e8c0d0;
-  border-radius: 14px;
-  font-family: 'Caveat', cursive;
-  font-size: 1.15rem;
-  color: var(--ink);
-  background: #fff9fb;
-  outline: none;
-  resize: vertical;
-}
-
-.field textarea:focus, .field input:focus { border-style: solid; border-color: var(--mom); }
-.field textarea.k, .field input.k { border-color: #b0dcea; background: #f5fbff; }
-.field textarea.k:focus, .field input.k:focus { border-color: var(--kid); }
-
-.img-upload-area {
-  border: 2px dashed #e8c0d0;
-  border-radius: 14px;
-  padding: 1.5rem;
-  text-align: center;
-  cursor: pointer;
-  background: #fff9fb;
-  transition: all .2s;
-}
-
-.img-upload-area:hover { background: var(--mom-l); border-color: var(--mom); }
-.img-upload-area.k { border-color: #b0dcea; background: #f5fbff; }
-.img-upload-area.k:hover { background: var(--kid-l); border-color: var(--kid); }
-
-.img-preview { width: 100%; max-height: 160px; object-fit: cover; border-radius: 10px; margin-top: .8rem; }
-
-.modal-actions {
-  display: flex;
-  gap: .8rem;
-  justify-content: flex-end;
-  margin-top: 1.2rem;
-}
-
-.btn-cancel { background: #f0e8ec; color: #a07080; }
-.btn-cancel:hover { background: #e0d0d8; }
-.btn-save { background: var(--mom); color: white; box-shadow: 0 4px 12px #e8789a44; }
-.btn-save:hover { background: var(--mom-d); }
-.btn-save.k { background: var(--kid); box-shadow: 0 4px 12px #5ec4e044; }
-.btn-save.k:hover { background: var(--kid-d); }
-
-/* CONFETTI CANVAS */
-#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400; display: none; }
-
-/* STICKER BOARD display */
-.sticker-board-section { margin-top: 1.5rem; }
-.sticker-board-title { font-size: 1.2rem; color: #a07080; margin-bottom: .5rem; }
-.sticker-wall {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .5rem;
-  padding: 1rem;
-  background: linear-gradient(135deg, #fff5f8, #fff0f5);
-  border-radius: 16px;
-  border: 2px dashed #f0c0d0;
-  min-height: 80px;
-}
-.sticker-wall .si { font-size: 2rem; animation: stickerPop .3s cubic-bezier(.34,1.56,.64,1); }
-@keyframes stickerPop { from { transform: scale(0); } to { transform: scale(1); } }
-
-/* Empty states */
-.empty { text-align: center; padding: 3rem; color: #c0a0b0; font-size: 1.2rem; }
-.empty span { font-size: 2.5rem; display: block; margin-bottom: .5rem; }
-
-/* Letter full view */
-.letter-full {
-  font-size: 1.2rem;
-  color: var(--ink);
-  line-height: 1.7;
-  background: #fffaf8;
-  padding: 1rem;
-  border-radius: 12px;
-  border: 1px solid #f0d8e8;
-  white-space: pre-wrap;
-}
-</style>
-</head>
-<body>
-
-<canvas id="confetti"></canvas>
-
-<!-- ===== LOGIN ===== -->
-<div id="login">
-  <div class="login-logo">📔</div>
-  <div>
-    <h1 class="login-h">Бидний Нандин Дэвтэр</h1><br>
-    <p class="login-sub">Ээж болон охины нууц ертөнц 🌸</p>
-  </div>
-  <div class="user-cards">
-    <div class="u-card mom" onclick="login('mom')">
-      <span class="u-avatar">👩</span>
-      <div class="u-name">Ээж</div>
-      <div class="u-sub">Миний хэсэг</div>
-    </div>
-    <div class="u-card kid" onclick="login('kid')">
-      <span class="u-avatar">👧</span>
-      <div class="u-name">Охин</div>
-      <div class="u-sub">Миний хэсэг</div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== APP ===== -->
-<div id="app">
-  <header>
-    <div class="h-left">
-      <span class="app-title">📔 Манай Дэвтэр</span>
-      <div id="badge" class="badge"></div>
-    </div>
-    <button class="btn btn-out" onclick="logout()">← Гарах</button>
-  </header>
-
-  <nav>
-    <button class="tab" id="t-plan" onclick="showSection('plan')">📋 Өдрийн план</button>
-    <button class="tab" id="t-letters" onclick="showSection('letters')">💌 Нандин үг</button>
-    <button class="tab" id="t-memories" onclick="showSection('memories')">🖼️ Дурсамж</button>
-    <button class="tab" id="t-stickers" onclick="showSection('stickers')">⭐ Миний стикер</button>
-  </nav>
-
-  <!-- PLAN -->
-  <div class="section" id="sec-plan">
-    <div class="sec-title">📋 Өдрийн төлөвлөгөө</div>
-
-    <div class="plan-date-nav">
-      <button class="date-btn" id="prev-day" onclick="changeDay(-1)">◀</button>
-      <span class="date-label" id="date-label"></span>
-      <button class="date-btn" id="next-day" onclick="changeDay(1)">▶</button>
-    </div>
-
-    <div class="plan-card" id="plan-card">
-      <div class="plan-progress">
-        <div class="progress-label">
-          <span id="prog-text">0 / 0 ажил</span>
-          <span id="prog-pct">0%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="prog-fill" style="width:0%"></div>
-        </div>
-      </div>
-
-      <div class="task-add-row">
-        <input type="text" class="task-input" id="task-input" placeholder="Шинэ ажил нэмэх..." onkeydown="if(event.key==='Enter')addTask()">
-        <button class="btn-task-add" id="task-add-btn" onclick="addTask()">+</button>
-      </div>
-
-      <div class="task-list" id="task-list"></div>
-
-      <div style="display:flex; gap:1.5rem; align-items:flex-start;">
-        <div class="plan-card" id="plan-card" style="flex:1;">
-        </div>
-      <div id="tomorrow-preview" style="flex:1;"></div>  <!-- маргаашийн preview энд гарна -->
-
-    </div>
-
-    <div class="sticker-board-section">
-      <div class="sticker-board-title">🌟 Өнөөдрийн шагнал</div>
-      <div class="sticker-wall" id="today-sticker-wall"></div>
-    </div>
-  </div>
-
-  <!-- LETTERS -->
-  <div class="section" id="sec-letters">
-    <div class="sec-title">💌 Нандин үгс</div>
-    <div id="letters-intro-box" class="letters-intro"></div>
-    <button class="btn new-letter-btn" id="new-letter-btn" onclick="openLetterModal()">✏️ Захидал бичих</button>
-    <div class="letters-grid" id="letters-grid"></div>
-  </div>
-
-  <!-- MEMORIES -->
-  <div class="section" id="sec-memories">
-    <div class="sec-title">🖼️ Дурсамжийн цомог</div>
-    <button class="btn add-memory-btn" id="add-mem-btn" onclick="openMemoryModal()">📸 Дурсамж нэмэх</button>
-    <div class="memories-grid" id="memories-grid"></div>
-  </div>
-
-  <!-- STICKERS COLLECTION -->
-  <div class="section" id="sec-stickers">
-    <div class="sec-title">⭐ Миний стикер цуглуулга</div>
-    <div id="sticker-stats" style="margin-bottom:1rem; font-size:1.1rem; color:#a07080;"></div>
-    <div class="sticker-wall" id="sticker-collection-wall" style="background: linear-gradient(135deg,#fffaf0,#fff5f8); border-color: #f5d090; font-size:2.2rem; gap:.6rem; min-height:120px;"></div>
-  </div>
-</div>
-
-<!-- REWARD POPUP -->
-<div class="sticker-reward" id="reward-popup">
-  <div class="reward-box">
-    <span class="reward-sticker" id="reward-emoji">⭐</span>
-    <div class="reward-title">Баяр хүргэе! 🎉</div>
-    <div class="reward-sub" id="reward-msg">Өдрийн бүх ажлаа дуусгалаа!</div>
-    <div style="margin-top:1rem">
-      <button class="btn btn-save" onclick="closeReward()" style="padding:.5rem 2rem; font-size:1.1rem;">Баярлалаа 💖</button>
-    </div>
-  </div>
-</div>
-
-<!-- LETTER MODAL -->
-<div class="overlay" id="letter-overlay">
-  <div class="modal">
-    <h3 id="letter-modal-title">💌 Захидал бичих</h3>
-    <div class="field">
-      <label>Захидлын гарчиг</label>
-      <input type="text" id="letter-title-inp" placeholder="Гарчиг...">
-    </div>
-    <div class="field">
-      <label id="letter-to-label">Охиндоо захидал</label>
-      <textarea id="letter-body" rows="6" placeholder="Зүрх сэтгэлийнхээ үгийг бич..."></textarea>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-cancel" onclick="closeOverlay('letter-overlay')">Болих</button>
-      <button class="btn btn-save" id="letter-save-btn" onclick="saveLetter()">Илгээх 💌</button>
-    </div>
-  </div>
-</div>
-
-<!-- LETTER READ MODAL -->
-<div class="overlay" id="read-overlay">
-  <div class="modal">
-    <h3 id="read-title">💌</h3>
-    <div class="letter-full" id="read-body"></div>
-    <div style="margin-top:.8rem; font-size:.9rem; color:#b09090;" id="read-meta"></div>
-    <div class="modal-actions">
-      <button class="btn btn-cancel" onclick="closeOverlay('read-overlay')">Хаах</button>
-    </div>
-  </div>
-</div>
-
-<!-- MEMORY MODAL -->
-<div class="overlay" id="memory-overlay">
-  <div class="modal">
-    <h3 id="mem-modal-title">📸 Дурсамж нэмэх</h3>
-    <div class="field">
-      <label>Тэмдэглэл</label>
-      <textarea id="mem-text" rows="3" placeholder="Энэ тухай бич..."></textarea>
-    </div>
-    <div class="field">
-      <label>Зураг (заавал биш)</label>
-      <div class="img-upload-area" id="upload-area" onclick="document.getElementById('img-file').click()">
-        <div id="upload-label">📷 Зураг сонгох</div>
-        <img id="img-preview" class="img-preview" style="display:none">
-        <input type="file" id="img-file" accept="image/*" style="display:none" onchange="previewImg(event)">
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-cancel" onclick="closeOverlay('memory-overlay'); clearImg()">Болих</button>
-      <button class="btn btn-save" id="mem-save-btn" onclick="saveMemory()">Хадгалах 🌸</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// ===== STATE =====
-let me = null;
-let currentDate = todayStr();
-const STICKERS = ['⭐','🌟','✨','🎀','🌸','🍀','🦋','🌈','💫','🎊','🌺','🍭','🎈','💎','🏆'];
-
-function todayStr() {
-  return new Date().toISOString().split('T')[0];
-}
-
-function dateLabel(str) {
-  const d = new Date(str + 'T00:00:00');
-  const today = todayStr();
-  if (str === today) return '📅 Өнөөдөр · ' + d.toLocaleDateString('mn-MN', {month:'long', day:'numeric', weekday:'long'});
-  return d.toLocaleDateString('mn-MN', {month:'long', day:'numeric', weekday:'long'});
-}
-
-// ===== STORAGE =====
-function load(key) {
-  try { return JSON.parse(localStorage.getItem('mnd-' + key) || 'null'); } catch { return null; }
-}
-
-function save(key, val) {
-  localStorage.setItem('mnd-' + key, JSON.stringify(val));
-}
-
-function getTasks(user, date) {
-  return load('tasks-' + user + '-' + date) || [];
-}
-
-function saveTasks(user, date, tasks) {
-  save('tasks-' + user + '-' + date, tasks);
-}
-
-function getStickers(user) {
-  return load('stickers-' + user) || [];
-}
-
-const BIG_STICKERS = ['🏆','🌟','🎊','👑','💎','🎖️','🥇','🌈','🎯','🦄'];
-
-function addSticker(user, size) {
-  const s = getStickers(user);
-  const pool = size === 'big' ? BIG_STICKERS : STICKERS;
-  const pick = pool[Math.floor(Math.random() * pool.length)];
-  s.push({ emoji: pick, date: todayStr(), big: size === 'big' });
-  save('stickers-' + user, s);
-  return pick;
-}
-
-function getLetters() { return load('letters') || []; }
-function saveLetters(l) { save('letters', l); }
-function getMemories() { return load('memories') || []; }
-function saveMemories(m) { save('memories', m); }
-
-// ===== LOGIN =====
-function login(user) {
-  me = user;
-  document.getElementById('login').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
-
-  const b = document.getElementById('badge');
-  b.className = 'badge ' + user;
-  b.textContent = user === 'mom' ? '👩 Ээж' : '👧 Охин';
-
-  currentDate = todayStr();
-  showSection('plan');
-}
-
-function logout() {
-  me = null;
-  document.getElementById('login').style.display = 'flex';
-  document.getElementById('app').style.display = 'none';
-}
-
-// ===== SECTIONS =====
-function showSection(sec) {
-  ['plan','letters','memories','stickers'].forEach(s => {
-    document.getElementById('sec-' + s).classList.remove('visible');
-    const t = document.getElementById('t-' + s);
-    t.className = 'tab';
-  });
-
-  document.getElementById('sec-' + sec).classList.add('visible');
-  const activeTab = document.getElementById('t-' + sec);
-  activeTab.className = 'tab on' + (me === 'kid' ? ' kid-mode' : '');
-
-  if (sec === 'plan') renderPlan();
-  if (sec === 'letters') renderLetters();
-  if (sec === 'memories') renderMemories();
-  if (sec === 'stickers') renderStickerCollection();
-}
-
-// ===== PLAN =====
-function renderPlan() {
-
-
-  // Маргаашийн preview
-    const tomorrow = (function() {
-      const parts = currentDate.split('-');
-      const dt = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
-      dt.setDate(dt.getDate() + 1);
-      const y = dt.getFullYear();
-      const m = String(dt.getMonth()+1).padStart(2,'0');
-      const d = String(dt.getDate()).padStart(2,'0');
-      return `${y}-${m}-${d}`;
-    })();
-
-    const tomorrowTasks = getTasks(me, tomorrow);
-    const tPreview = document.getElementById('tomorrow-preview');
-
-    if (tomorrow <= todayStr() || tomorrowTasks.length === 0) {
-      tPreview.innerHTML = '';
-    } else {
-      tPreview.innerHTML = `
-       <div style="
-        background:#fffef9; border:2px dashed #f0d0e0;
-        border-radius:16px; padding:1rem;
-        opacity:0.75; font-family:'Caveat',cursive;
-      ">
-          <div style="font-size:.9rem; color:#b09090; margin-bottom:.6rem;">
-            📅 Маргааш
-          </div>
-          ${tomorrowTasks.map(t => `
-            <div style="
-              font-size:1rem; color:#5a3a4a; padding:.3rem 0;
-              border-bottom:1px dashed #f0d8e8;
-              text-decoration:${t.done ? 'line-through' : 'none'};
-              opacity:${t.done ? '.5' : '1'};
-            ">• ${t.text}</div>
-          `).join('')}
-        </div>
-      `;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌸 Манай Дэвтэр</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Gaegu:wght@300;400;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --mom: #5ec4e0;
+      --mom-l: #dff4fb;
+      --mom-d: #2a8aaa;
+      --kid: #e8789a;
+      --kid-l: #fde8f0;
+      --kid-d: #b84a6a;
+      --gold: #f5c842;
+      --bg: #faf6f0;
+      --paper: #fffef9;
+      --ink: #3a2030;
     }
 
-  document.getElementById('date-label').textContent = dateLabel(currentDate);
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  const isKid = me === 'kid';
-  document.getElementById('prev-day').className = 'date-btn' + (isKid ? ' kid-mode' : '');
-  document.getElementById('next-day').className = 'date-btn' + (isKid ? ' kid-mode' : '');
-  document.getElementById('task-input').className = 'task-input' + (isKid ? ' kid-inp' : '');
-  document.getElementById('task-add-btn').className = 'btn-task-add' + (isKid ? ' kid-mode' : '');
-  document.getElementById('prog-fill').className = 'progress-fill' + (isKid ? ' kid-fill' : '');
+    body {
+      font-family: 'Caveat', cursive;
+      background: var(--bg);
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse at 10% 10%, #fde8f055 0%, transparent 50%),
+        radial-gradient(ellipse at 90% 90%, #dff4fb55 0%, transparent 50%);
+    }
 
-  const tasks = getTasks(me, currentDate);
-  const done = tasks.filter(t => t.done).length;
-  const total = tasks.length;
-  const pct = total ? Math.round(done / total * 100) : 0;
+    /* ========= LOGIN ========= */
+    #login {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      padding: 2rem;
+    }
 
-  document.getElementById('prog-text').textContent = done + ' / ' + total + ' ажил';
-  document.getElementById('prog-pct').textContent = pct + '%';
-  document.getElementById('prog-fill').style.width = pct + '%';
+    .login-logo {
+      font-size: 4rem;
+      animation: sway 3s ease-in-out infinite;
+    }
 
-  const list = document.getElementById('task-list');
-  if (tasks.length === 0) {
-    list.innerHTML = '<div class="empty" style="padding:1.5rem"><span>📝</span>Ажил нэмэх товч дарна уу</div>';
-  } else {
-    list.innerHTML = tasks.map((t, i) => `
+    @keyframes sway {
+
+      0%,
+      100% {
+        transform: rotate(-5deg);
+      }
+
+      50% {
+        transform: rotate(5deg);
+      }
+    }
+
+    .login-h {
+      font-family: 'Gaegu', cursive;
+      font-size: 2.8rem;
+      color: var(--mom-d);
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .login-sub {
+      font-size: 1.2rem;
+      color: #a07080;
+      text-align: center;
+      margin-top: -1.5rem;
+    }
+
+    .user-cards {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .u-card {
+      width: 160px;
+      padding: 2rem 1rem;
+      border-radius: 28px;
+      text-align: center;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: all .3s cubic-bezier(.34, 1.56, .64, 1);
+      position: relative;
+    }
+
+    .u-card.mom {
+      background: var(--mom-l);
+      border-color: var(--mom);
+      box-shadow: 0 8px 24px #e8789a33;
+    }
+
+    .u-card.kid {
+      background: var(--kid-l);
+      border-color: var(--kid);
+      box-shadow: 0 8px 24px #5ec4e033;
+    }
+
+    .u-card:hover {
+      transform: translateY(-10px) scale(1.04);
+    }
+
+    .u-avatar {
+      font-size: 3.5rem;
+      display: block;
+      margin-bottom: .5rem;
+    }
+
+    .u-name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .u-sub {
+      font-size: 1rem;
+      color: #a07080;
+      margin-top: .2rem;
+    }
+
+    .u-card.kid .u-sub {
+      color: #4a8aaa;
+    }
+
+    /* ========= APP SHELL ========= */
+    #app {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--paper);
+      border-bottom: 2px dashed #e8c8d4;
+      padding: .8rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 16px #e8789a11;
+    }
+
+    .h-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .app-title {
+      font-family: 'Gaegu', cursive;
+      font-size: 1.8rem;
+      color: var(--mom-d);
+    }
+
+    .badge {
+      padding: .3rem 1rem;
+      border-radius: 50px;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .badge.mom {
+      background: var(--mom-l);
+      color: var(--mom-d);
+      border: 2px solid var(--mom);
+    }
+
+    .badge.kid {
+      background: var(--kid-l);
+      color: var(--kid-d);
+      border: 2px solid var(--kid);
+    }
+
+    .btn {
+      padding: .45rem 1.1rem;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Caveat', cursive;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all .2s;
+    }
+
+    .btn-out {
+      background: transparent;
+      color: #a07080;
+      border: 2px dashed #e0b0c0;
+    }
+
+    .btn-out:hover {
+      background: var(--mom-l);
+    }
+
+    /* NAV TABS */
+    nav {
+      background: var(--paper);
+      border-bottom: 2px dashed #e8c8d4;
+      display: flex;
+      overflow-x: auto;
+    }
+
+    .tab {
+      padding: .9rem 1.5rem;
+      cursor: pointer;
+      font-family: 'Caveat', cursive;
+      font-size: 1.1rem;
+      color: #b09090;
+      border: none;
+      border-bottom: 3px solid transparent;
+      background: none;
+      white-space: nowrap;
+      transition: all .2s;
+    }
+
+    .tab:hover {
+      color: var(--mom-d);
+    }
+
+    .tab.on {
+      color: var(--mom-d);
+      border-bottom-color: var(--mom);
+      font-weight: 700;
+    }
+
+    .tab.on.kid-mode {
+      color: var(--kid-d);
+      border-bottom-color: var(--kid);
+    }
+
+    /* ========= SECTIONS ========= */
+    .section {
+      display: none;
+      padding: 1.5rem;
+    }
+
+    .section.visible {
+      display: block;
+    }
+
+    .sec-title {
+      font-family: 'Gaegu', cursive;
+      font-size: 2rem;
+      color: var(--ink);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    /* ========= PLAN SECTION ========= */
+    .plan-date-nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .date-btn {
+      background: var(--mom-l);
+      border: 2px solid var(--mom);
+      color: var(--mom-d);
+      padding: .3rem .9rem;
+      border-radius: 50px;
+      font-family: 'Caveat', cursive;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .date-btn:hover {
+      background: var(--mom);
+      color: white;
+    }
+
+    .date-btn.kid-mode {
+      background: var(--kid-l);
+      border-color: var(--kid);
+      color: var(--kid-d);
+    }
+
+    .date-btn.kid-mode:hover {
+      background: var(--kid);
+      color: white;
+    }
+
+    .date-label {
+      font-size: 1.3rem;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .plan-card {
+      background: var(--paper);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px #e8789a18;
+      border: 2px solid #f5d8e4;
+      max-width: 600px;
+    }
+
+    .plan-progress {
+      margin-bottom: 1.2rem;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1rem;
+      color: #a07080;
+      margin-bottom: .4rem;
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: #f0d8e8;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--mom), #f5a0c0);
+      border-radius: 10px;
+      transition: width .5s ease;
+    }
+
+    .progress-fill.kid-fill {
+      background: linear-gradient(90deg, var(--kid), #8adcf0);
+    }
+
+    .task-add-row {
+      display: flex;
+      gap: .6rem;
+      margin-bottom: 1rem;
+    }
+
+    .task-input {
+      flex: 1;
+      padding: .6rem 1rem;
+      border: 2px dashed #e8c0d0;
+      border-radius: 50px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.1rem;
+      color: var(--ink);
+      background: #fff9fb;
+      outline: none;
+    }
+
+    .task-input:focus {
+      border-color: var(--mom);
+      border-style: solid;
+    }
+
+    .task-input.kid-inp {
+      border-color: #b0dcea;
+      background: #f5fbff;
+    }
+
+    .task-input.kid-inp:focus {
+      border-color: var(--kid);
+    }
+
+    .btn-task-add {
+      background: var(--mom);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-task-add:hover {
+      transform: scale(1.1);
+      background: var(--mom-d);
+    }
+
+    .btn-task-add.kid-mode {
+      background: var(--kid);
+    }
+
+    .btn-task-add.kid-mode:hover {
+      background: var(--kid-d);
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      padding: .6rem .8rem;
+      border-radius: 12px;
+      background: #fff5f8;
+      transition: all .2s;
+    }
+
+    .task-item.done {
+      background: #f0fff4;
+      opacity: .7;
+    }
+
+    .task-item.kid-task {
+      background: #f0f9ff;
+    }
+
+    .task-item.done.kid-task {
+      background: #e8fff0;
+    }
+
+    .task-check {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid var(--mom);
+      background: white;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: all .3s cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    .task-check.checked {
+      background: var(--mom);
+      border-color: var(--mom);
+    }
+
+    .task-check.kid-chk {
+      border-color: var(--kid);
+    }
+
+    .task-check.checked.kid-chk {
+      background: var(--kid);
+      border-color: var(--kid);
+    }
+
+    .task-text {
+      flex: 1;
+      font-size: 1.15rem;
+      color: var(--ink);
+      transition: all .2s;
+    }
+
+    .task-item.done .task-text {
+      text-decoration: line-through;
+      color: #b09090;
+    }
+
+    .task-del {
+      background: none;
+      border: none;
+      color: #d08090;
+      font-size: 1rem;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+
+    .task-item:hover .task-del {
+      opacity: .6;
+    }
+
+    .task-del:hover {
+      opacity: 1 !important;
+    }
+
+    /* STICKER REWARD */
+    .sticker-reward {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(50, 20, 30, .5);
+      backdrop-filter: blur(6px);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .sticker-reward.show {
+      display: flex;
+    }
+
+    .reward-box {
+      background: var(--paper);
+      border-radius: 28px;
+      padding: 3rem 2.5rem;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(80, 20, 40, .3);
+      animation: popBounce .5s cubic-bezier(.34, 1.56, .64, 1);
+      max-width: 340px;
+    }
+
+    @keyframes popBounce {
+      0% {
+        transform: scale(0) rotate(-10deg);
+      }
+
+      100% {
+        transform: scale(1) rotate(0);
+      }
+    }
+
+    .reward-sticker {
+      font-size: 5rem;
+      display: block;
+      animation: spin1 .6s ease;
+    }
+
+    @keyframes spin1 {
+      0% {
+        transform: rotate(-180deg) scale(0);
+      }
+
+      100% {
+        transform: rotate(0) scale(1);
+      }
+    }
+
+    .reward-title {
+      font-family: 'Gaegu', cursive;
+      font-size: 2rem;
+      color: var(--mom-d);
+      margin: .5rem 0;
+    }
+
+    .reward-sub {
+      font-size: 1.1rem;
+      color: #a07080;
+    }
+
+    .sticker-collection {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--mom-l);
+      border-radius: 16px;
+      min-height: 60px;
+      justify-content: center;
+    }
+
+    .sticker-item {
+      font-size: 1.8rem;
+      cursor: default;
+    }
+
+    .sticker-count-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      background: var(--gold);
+      padding: .2rem .8rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #5a3a00;
+      margin-top: .5rem;
+    }
+
+    /* ========= LETTERS SECTION ========= */
+    .letters-intro {
+      font-size: 1.1rem;
+      color: #a07080;
+      margin-bottom: 1.5rem;
+      background: var(--mom-l);
+      padding: .8rem 1.2rem;
+      border-radius: 14px;
+      border-left: 4px solid var(--mom);
+    }
+
+    .letters-intro.kid-intro {
+      background: var(--kid-l);
+      border-left-color: var(--kid);
+      color: #4a8aaa;
+    }
+
+    .letters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .letter-card {
+      background: var(--paper);
+      border-radius: 18px;
+      padding: 1.2rem;
+      border: 2px dashed #e8c8d4;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .letter-card::before {
+      content: '🔒';
+      position: absolute;
+      right: 10px;
+      top: 8px;
+      font-size: 1rem;
+      opacity: .5;
+    }
+
+    .letter-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px #e8789a22;
+    }
+
+    .letter-from {
+      font-size: .9rem;
+      color: #b09090;
+      margin-bottom: .3rem;
+    }
+
+    .letter-preview {
+      font-size: 1.1rem;
+      color: var(--ink);
+      filter: blur(4px);
+      user-select: none;
+      line-height: 1.4;
+    }
+
+    .letter-card.mine .letter-preview {
+      filter: none;
+    }
+
+    .letter-card.mine::before {
+      content: '✉️';
+    }
+
+    .letter-date {
+      font-size: .85rem;
+      color: #c0a0b0;
+      margin-top: .5rem;
+    }
+
+    .new-letter-btn {
+      margin-bottom: 1.2rem;
+      background: var(--mom);
+      color: white;
+      padding: .6rem 1.4rem;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 14px #e8789a44;
+    }
+
+    .new-letter-btn:hover {
+      background: var(--mom-d);
+      transform: scale(1.03);
+    }
+
+    .new-letter-btn.kid-mode {
+      background: var(--kid);
+      box-shadow: 0 4px 14px #5ec4e044;
+    }
+
+    .new-letter-btn.kid-mode:hover {
+      background: var(--kid-d);
+    }
+
+    /* ========= MEMORIES SECTION ========= */
+    .memories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .memory-card {
+      background: var(--paper);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 4px 18px #e8789a18;
+      border: 2px solid #f5d8e4;
+      transition: all .2s;
+    }
+
+    .memory-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 32px #e8789a28;
+    }
+
+    .memory-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: #f0e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    .memory-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .memory-body {
+      padding: 1rem;
+    }
+
+    .memory-text {
+      font-size: 1.1rem;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+
+    .memory-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-top: .5rem;
+      font-size: .85rem;
+      color: #b09090;
+    }
+
+    .add-memory-btn {
+      background: var(--mom);
+      color: white;
+      padding: .6rem 1.4rem;
+      font-size: 1.1rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 4px 14px #e8789a44;
+    }
+
+    .btn-delete {
+      color: #b84a6a;
+      padding: 3px 0 0 3px;
+      margin-left: 7.5rem;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 2px solid transparent !important;
+    }
+
+    .add-memory-btn:hover {
+      background: var(--mom-d);
+      transform: scale(1.03);
+    }
+
+    .add-memory-btn.kid-mode {
+      background: var(--kid);
+    }
+
+    .add-memory-btn.kid-mode:hover {
+      background: var(--kid-d);
+    }
+
+    /* ========= MODAL ========= */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(50, 20, 30, .4);
+      backdrop-filter: blur(5px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--paper);
+      border-radius: 24px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 24px 60px rgba(80, 20, 40, .25);
+      animation: popIn .3s cubic-bezier(.34, 1.56, .64, 1);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(.85);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .modal h3 {
+      font-family: 'Gaegu', cursive;
+      font-size: 1.8rem;
+      color: var(--ink);
+      margin-bottom: 1.2rem;
+    }
+
+    .field {
+      margin-bottom: 1rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 1rem;
+      color: #a07080;
+      margin-bottom: .3rem;
+    }
+
+    .field textarea,
+    .field input[type=text] {
+      width: 100%;
+      padding: .7rem 1rem;
+      border: 2px dashed #e8c0d0;
+      border-radius: 14px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.15rem;
+      color: var(--ink);
+      background: #fff9fb;
+      outline: none;
+      resize: vertical;
+    }
+
+    .field textarea:focus,
+    .field input:focus {
+      border-style: solid;
+      border-color: var(--mom);
+    }
+
+    .field textarea.k,
+    .field input.k {
+      border-color: #b0dcea;
+      background: #f5fbff;
+    }
+
+    .field textarea.k:focus,
+    .field input.k:focus {
+      border-color: var(--kid);
+    }
+
+    .img-upload-area {
+      border: 2px dashed #e8c0d0;
+      border-radius: 14px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      background: #fff9fb;
+      transition: all .2s;
+    }
+
+    .img-upload-area:hover {
+      background: var(--mom-l);
+      border-color: var(--mom);
+    }
+
+    .img-upload-area.k {
+      border-color: #b0dcea;
+      background: #f5fbff;
+    }
+
+    .img-upload-area.k:hover {
+      background: var(--kid-l);
+      border-color: var(--kid);
+    }
+
+    .img-preview {
+      width: 100%;
+      max-height: 160px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-top: .8rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: .8rem;
+      justify-content: flex-end;
+      margin-top: 1.2rem;
+    }
+
+    .btn-cancel {
+      background: #f0e8ec;
+      color: #a07080;
+    }
+
+    .btn-cancel:hover {
+      background: #e0d0d8;
+    }
+
+    .btn-save {
+      background: var(--mom);
+      color: white;
+      box-shadow: 0 4px 12px #e8789a44;
+    }
+
+    .btn-save:hover {
+      background: var(--mom-d);
+    }
+
+    .btn-save.k {
+      background: var(--kid);
+      box-shadow: 0 4px 12px #5ec4e044;
+    }
+
+    .btn-save.k:hover {
+      background: var(--kid-d);
+    }
+
+    /* CONFETTI CANVAS */
+    #confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 400;
+      display: none;
+    }
+
+    /* STICKER BOARD display */
+    .sticker-board-section {
+      margin-top: 1.5rem;
+    }
+
+    .sticker-board-title {
+      font-size: 1.2rem;
+      color: #a07080;
+      margin-bottom: .5rem;
+    }
+
+    .sticker-wall {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      padding: 1rem;
+      background: linear-gradient(135deg, #fff5f8, #fff0f5);
+      border-radius: 16px;
+      border: 2px dashed #f0c0d0;
+      min-height: 80px;
+    }
+
+    .sticker-wall .si {
+      font-size: 2rem;
+      animation: stickerPop .3s cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    @keyframes stickerPop {
+      from {
+        transform: scale(0);
+      }
+
+      to {
+        transform: scale(1);
+      }
+    }
+
+    /* Empty states */
+    .empty {
+      text-align: center;
+      padding: 3rem;
+      color: #c0a0b0;
+      font-size: 1.2rem;
+    }
+
+    .empty span {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: .5rem;
+    }
+
+    /* Letter full view */
+    .letter-full {
+      font-size: 1.2rem;
+      color: var(--ink);
+      line-height: 1.7;
+      background: #fffaf8;
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px solid #f0d8e8;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="confetti"></canvas>
+
+  <!-- ===== LOGIN ===== -->
+  <div id="login">
+    <div class="login-logo">📔</div>
+    <div>
+      <h1 class="login-h">Манай Нандин Дэвтэр</h1><br>
+      <p class="login-sub">Ээж болон охины нууц ертөнц 🌸</p>
+    </div>
+    <div class="user-cards">
+      <div class="u-card mom" onclick="login('mom')">
+        <span class="u-avatar">
+            <img src="Desktop//eej.jpg" style="width:80px; height:80px; border-radius:50%; object-fit:cover;">
+        </span>
+        <div class="u-name">Ээж</div>
+        <div class="u-sub">Миний хэсэг</div>
+      </div>
+      <div class="u-card kid" onclick="login('kid')">
+        <span class="u-avatar">
+            <img src="Desktop//ohin.jpg" style="width:80px; height:80px; border-radius:50%; object-fit:cover;">
+        </span>
+        <div class="u-name">Охин</div>
+        <div class="u-sub">Миний хэсэг</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== APP ===== -->
+  <div id="app">
+    <header>
+      <div class="h-left">
+        <span class="app-title">📔 Манай Дэвтэр</span>
+        <div id="badge" class="badge"></div>
+      </div>
+      <button class="btn btn-out" onclick="logout()">← Гарах</button>
+    </header>
+
+    <nav>
+      <button class="tab" id="t-plan" onclick="showSection('plan')">📋 Өдрийн план</button>
+      <button class="tab" id="t-letters" onclick="showSection('letters')">💌 Нандин үг</button>
+      <button class="tab" id="t-memories" onclick="showSection('memories')">🖼️ Дурсамж</button>
+      <button class="tab" id="t-stickers" onclick="showSection('stickers')">⭐ Миний стикер</button>
+    </nav>
+
+    <!-- PLAN -->
+    <div class="section" id="sec-plan">
+      <div class="sec-title">📋 Өдрийн төлөвлөгөө</div>
+
+      <div class="plan-date-nav">
+        <button class="date-btn" id="prev-day" onclick="changeDay(-1)">◀</button>
+        <span class="date-label" id="date-label"></span>
+        <button class="date-btn" id="next-day" onclick="changeDay(1)">▶</button>
+      </div>
+
+      <div class="plan-card" id="plan-card">
+        <div class="plan-progress">
+          <div class="progress-label">
+            <span id="prog-text">0 / 0 ажил</span>
+            <span id="prog-pct">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div class="task-add-row">
+          <input type="text" class="task-input" id="task-input" placeholder="Шинэ ажил нэмэх..."
+            onkeydown="if(event.key==='Enter')addTask()">
+          <button class="btn-task-add" id="task-add-btn" onclick="addTask()">+</button>
+        </div>
+
+        <div class="task-list" id="task-list"></div>
+      </div>
+
+      <div class="sticker-board-section">
+        <div class="sticker-board-title">🌟 Өнөөдрийн шагнал</div>
+        <div class="sticker-wall" id="today-sticker-wall"></div>
+      </div>
+    </div>
+
+    <!-- LETTERS -->
+    <div class="section" id="sec-letters">
+      <div class="sec-title">💌 Нандин үгс</div>
+      <div id="letters-intro-box" class="letters-intro"></div>
+      <button class="btn new-letter-btn" id="new-letter-btn" onclick="openLetterModal()">✏️ Захидал бичих</button>
+      <div class="letters-grid" id="letters-grid"></div>
+
+
+    </div>
+
+    <!-- MEMORIES -->
+    <div class="section" id="sec-memories">
+      <div class="sec-title">🖼️ Дурсамжийн цомог</div>
+      <button class="btn add-memory-btn" id="add-mem-btn" onclick="openMemoryModal()">📸 Дурсамж нэмэх</button>
+      <div class="memories-grid" id="memories-grid"></div>
+    </div>
+
+    <!-- STICKERS COLLECTION -->
+    <div class="section" id="sec-stickers">
+      <div class="sec-title">⭐ Миний стикер цуглуулга</div>
+      <div id="sticker-stats" style="margin-bottom:1rem; font-size:1.1rem; color:#a07080;"></div>
+      <div class="sticker-wall" id="sticker-collection-wall"
+        style="background: linear-gradient(135deg,#fffaf0,#fff5f8); border-color: #f5d090; font-size:2.2rem; gap:.6rem; min-height:120px;">
+      </div>
+    </div>
+  </div>
+
+  <!-- REWARD POPUP -->
+  <div class="sticker-reward" id="reward-popup">
+    <div class="reward-box">
+      <span class="reward-sticker" id="reward-emoji">⭐</span>
+      <div class="reward-title">Баяр хүргэе! 🎉</div>
+      <div class="reward-sub" id="reward-msg">Өдрийн бүх ажлаа дуусгалаа!</div>
+      <div style="margin-top:1rem">
+        <button class="btn btn-save" onclick="closeReward()" style="padding:.5rem 2rem; font-size:1.1rem;">Баярлалаа
+          💖</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LETTER MODAL -->
+  <div class="overlay" id="letter-overlay">
+    <div class="modal">
+      <h3 id="letter-modal-title">💌 Захидал бичих</h3>
+      <div class="field">
+        <label>Захидлын гарчиг</label>
+        <input type="text" id="letter-title-inp" placeholder="Гарчиг...">
+      </div>
+      <div class="field">
+        <label id="letter-to-label">Охиндоо захидал</label>
+        <textarea id="letter-body" rows="6" placeholder="Зүрх сэтгэлийнхээ үгийг бич..."></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-cancel" onclick="closeOverlay('letter-overlay')">Болих</button>
+        <button class="btn btn-save" id="letter-save-btn" onclick="saveLetter()">Илгээх 💌</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LETTER READ MODAL -->
+  <div class="overlay" id="read-overlay">
+    <div class="modal">
+      <h3 id="read-title">💌</h3>
+      <div class="letter-full" id="read-body"></div>
+      <div style="margin-top:.8rem; font-size:.9rem; color:#b09090;" id="read-meta"></div>
+      <div class="modal-actions">
+        <button class="btn btn-cancel" onclick="closeOverlay('read-overlay')">Хаах</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEMORY MODAL -->
+  <div class="overlay" id="memory-overlay">
+    <div class="modal">
+      <h3 id="mem-modal-title">📸 Дурсамж нэмэх</h3>
+      <div class="field">
+        <label>Тэмдэглэл</label>
+        <textarea id="mem-text" rows="3" placeholder="Энэ тухай бич..."></textarea>
+      </div>
+      <div class="field">
+        <label>Зураг (заавал биш)</label>
+        <div class="img-upload-area" id="upload-area" onclick="document.getElementById('img-file').click()">
+          <div id="upload-label">📷 Зураг сонгох</div>
+          <img id="img-preview" class="img-preview" style="display:none">
+          <input type="file" id="img-file" accept="image/*" style="display:none" onchange="previewImg(event)">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-cancel" onclick="closeOverlay('memory-overlay'); clearImg()">Болих</button>
+        <button class="btn btn-save" id="mem-save-btn" onclick="saveMemory()">Хадгалах 🌸</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== STATE =====
+    let me = null;
+    let currentReadId = null;
+    let currentDate = todayStr();
+    const STICKERS = ['⭐', '🌟', '✨', '🎀', '🌸', '🍀', '🦋', '🌈', '💫', '🎊', '🌺', '🍭', '🎈', '💎', '🏆'];
+
+    function todayStr() {
+      return new Date().toISOString().split('T')[0];
+    }
+
+    function dateLabel(str) {
+      const d = new Date(str + 'T00:00:00');
+      const today = todayStr();
+      if (str === today) return '📅 Өнөөдөр · ' + d.toLocaleDateString('mn-MN', { month: 'long', day: 'numeric', weekday: 'long' });
+      return d.toLocaleDateString('mn-MN', { month: 'long', day: 'numeric', weekday: 'long' });
+    }
+
+    // ===== STORAGE =====
+    function load(key) {
+      try { return JSON.parse(localStorage.getItem('mnd-' + key) || 'null'); } catch { return null; }
+    }
+
+    function save(key, val) {
+      localStorage.setItem('mnd-' + key, JSON.stringify(val));
+    }
+
+    function getTasks(user, date) {
+      return load('tasks-' + user + '-' + date) || [];
+    }
+
+    function saveTasks(user, date, tasks) {
+      save('tasks-' + user + '-' + date, tasks);
+    }
+
+    function getStickers(user) {
+      return load('stickers-' + user) || [];
+    }
+
+    function addSticker(user) {
+      const s = getStickers(user);
+      const pick = STICKERS[Math.floor(Math.random() * STICKERS.length)];
+      s.push({ emoji: pick, date: todayStr() });
+      save('stickers-' + user, s);
+      return pick;
+    }
+
+    function getLetters() { return load('letters') || []; }
+    function saveLetters(l) { save('letters', l); }
+    function getMemories() { return load('memories') || []; }
+    function saveMemories(m) { save('memories', m); }
+
+    // ===== LOGIN =====
+    function login(user) {
+      me = user;
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('app').style.display = 'flex';
+
+      const b = document.getElementById('badge');
+      b.className = 'badge ' + user;
+      b.textContent = user === 'mom' ? '👩 Ээж' : '👧 Охин';
+
+      currentDate = todayStr();
+      showSection('plan');
+    }
+
+    function logout() {
+      me = null;
+      document.getElementById('login').style.display = 'flex';
+      document.getElementById('app').style.display = 'none';
+    }
+
+    // ===== SECTIONS =====
+    function showSection(sec) {
+      ['plan', 'letters', 'memories', 'stickers'].forEach(s => {
+        document.getElementById('sec-' + s).classList.remove('visible');
+        const t = document.getElementById('t-' + s);
+        t.className = 'tab';
+      });
+
+      document.getElementById('sec-' + sec).classList.add('visible');
+      const activeTab = document.getElementById('t-' + sec);
+      activeTab.className = 'tab on' + (me === 'kid' ? ' kid-mode' : '');
+
+      if (sec === 'plan') renderPlan();
+      if (sec === 'letters') renderLetters();
+      if (sec === 'memories') renderMemories();
+      if (sec === 'stickers') renderStickerCollection();
+    }
+
+    // ===== PLAN =====
+    function renderPlan() {
+      document.getElementById('date-label').textContent = dateLabel(currentDate);
+
+      const isKid = me === 'kid';
+      document.getElementById('prev-day').className = 'date-btn' + (isKid ? ' kid-mode' : '');
+      document.getElementById('next-day').className = 'date-btn' + (isKid ? ' kid-mode' : '');
+      document.getElementById('task-input').className = 'task-input' + (isKid ? ' kid-inp' : '');
+      document.getElementById('task-add-btn').className = 'btn-task-add' + (isKid ? ' kid-mode' : '');
+      document.getElementById('prog-fill').className = 'progress-fill' + (isKid ? ' kid-fill' : '');
+
+      const tasks = getTasks(me, currentDate);
+      const done = tasks.filter(t => t.done).length;
+      const total = tasks.length;
+      const pct = total ? Math.round(done / total * 100) : 0;
+
+      document.getElementById('prog-text').textContent = done + ' / ' + total + ' ажил';
+      document.getElementById('prog-pct').textContent = pct + '%';
+      document.getElementById('prog-fill').style.width = pct + '%';
+
+      const list = document.getElementById('task-list');
+      if (tasks.length === 0) {
+        list.innerHTML = '<div class="empty" style="padding:1.5rem"><span>📝</span>Ажил нэмэх товч дарна уу</div>';
+      } else {
+        list.innerHTML = tasks.map((t, i) => `
       <div class="task-item${t.done ? ' done' : ''}${isKid ? ' kid-task' : ''}">
         <div class="task-check${t.done ? ' checked' : ''}${isKid ? ' kid-chk' : ''}" onclick="toggleTask(${i})">
           ${t.done ? '✓' : ''}
@@ -1000,332 +1308,319 @@ function renderPlan() {
         <button class="task-del" onclick="deleteTask(${i})">✕</button>
       </div>
     `).join('');
-  }
+      }
 
-  // today sticker wall
-  const wall = document.getElementById('today-sticker-wall');
-  const stickers = getStickers(me).filter(s => s.date === currentDate);
-  wall.innerHTML = stickers.length
-    ? stickers.map(s => `<span class="si">${s.emoji}</span>`).join('')
-    : '<span style="color:#c0a0b0; font-size:1rem; padding:.5rem">Бүх ажлаа дуусгавал стикер авна шүү 🌟</span>';
-}
-
-function changeDay(d) {
-  const parts = currentDate.split('-');  // "2026-05-10" → ["2026","05","10"]
-  const dt = new Date(
-    parseInt(parts[0]),   // жил
-    parseInt(parts[1])-1, // сар (0-оос эхэлдэг учир -1)
-    parseInt(parts[2])    // өдөр
-  );
-  dt.setDate(dt.getDate() + d);
-  
-  // жил, сар, өдрийг гараар нийлүүлнэ — timezone асуудалгүй
-  const y = dt.getFullYear();
-  const m = String(dt.getMonth()+1).padStart(2,'0');
-  const day = String(dt.getDate()).padStart(2,'0');
-  const newDate = `${y}-${m}-${day}`;
-  
-  currentDate = newDate;
-  renderPlan();
-}
-
-function addTask() {
-  const inp = document.getElementById('task-input');
-  const text = inp.value.trim();
-  if (!text) return;
-  const tasks = getTasks(me, currentDate);
-  tasks.push({ text, done: false });
-  saveTasks(me, currentDate, tasks);
-  inp.value = '';
-  renderPlan();
-}
-
-function toggleTask(i) {
-  const tasks = getTasks(me, currentDate);
-  const wasDone = tasks[i].done;
-  tasks[i].done = !tasks[i].done;
-  saveTasks(me, currentDate, tasks);
-
-  const total = tasks.length;
-  const done = tasks.filter(t => t.done).length;
-  renderPlan();
-
-  if (!wasDone && tasks[i].done) {
-    // Ажил бүр дуусгавал жижиг стикер
-    const emoji = addSticker(me, 'small');
-    showMiniSticker(emoji);
-
-    // Бүгд дуусвал том шагнал
-    if (total > 0 && done === total) {
-      setTimeout(() => {
-        const bigEmoji = addSticker(me, 'big');
-        showReward(bigEmoji);
-      }, 900);
+      // today sticker wall
+      const wall = document.getElementById('today-sticker-wall');
+      const stickers = getStickers(me).filter(s => s.date === currentDate);
+      wall.innerHTML = stickers.length
+        ? stickers.map(s => `<span class="si">${s.emoji}</span>`).join('')
+        : '<span style="color:#c0a0b0; font-size:1rem; padding:.5rem">Бүх ажлаа дуусгавал стикер авна шүү 🌟</span>';
     }
-  }
-}
 
-function showMiniSticker(emoji) {
-  const el = document.createElement('div');
-  el.textContent = emoji;
-  el.style.cssText = `
-    position:fixed; font-size:2.5rem; z-index:250; pointer-events:none;
-    left:${40 + Math.random()*60}%; top:${30 + Math.random()*30}%;
-    animation: floatUp 1.2s ease forwards;
-  `;
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), 1200);
-}
+    function changeDay(d) {
+      const parts = currentDate.split('-');  // "2026-05-10" → ["2026","05","10"]
+      const dt = new Date(
+        parseInt(parts[0]),   // жил
+        parseInt(parts[1]) - 1, // сар (0-оос эхэлдэг учир -1)
+        parseInt(parts[2])    // өдөр
+      );
+      dt.setDate(dt.getDate() + d);
 
-// CSS for floatUp animation (injected once)
-(function(){
-  if (!document.getElementById('mini-anim')) {
-    const s = document.createElement('style');
-    s.id = 'mini-anim';
-    s.textContent = `@keyframes floatUp {
-      0%   { transform: scale(0) translateY(0); opacity:1; }
-      40%  { transform: scale(1.4) translateY(-20px); opacity:1; }
-      100% { transform: scale(1) translateY(-70px); opacity:0; }
-    }`;
-    document.head.appendChild(s);
-  }
-})();
+      // жил, сар, өдрийг гараар нийлүүлнэ — timezone асуудалгүй
+      const y = dt.getFullYear();
+      const m = String(dt.getMonth() + 1).padStart(2, '0');
+      const day = String(dt.getDate()).padStart(2, '0');
+      const newDate = `${y}-${m}-${day}`;
 
-function deleteTask(i) {
-  const tasks = getTasks(me, currentDate);
-  tasks.splice(i, 1);
-  saveTasks(me, currentDate, tasks);
-  renderPlan();
-}
+      currentDate = newDate;
+      renderPlan();
+    }
 
-function showReward(emoji) {
-  document.getElementById('reward-emoji').textContent = emoji;
-  document.getElementById('reward-msg').textContent =
-    me === 'mom' ? 'Ээж маань бүх ажлаа хийж дуусгалаа! 💪' : 'Охин маань бүх ажлаа хийж дуусгалаа! 🌟';
-  document.getElementById('reward-popup').classList.add('show');
-  launchConfetti();
-}
+    function addTask() {
+      const inp = document.getElementById('task-input');
+      const text = inp.value.trim();
+      if (!text) return;
+      const tasks = getTasks(me, currentDate);
+      tasks.push({ text, done: false });
+      saveTasks(me, currentDate, tasks);
+      inp.value = '';
+      renderPlan();
+    }
 
-function closeReward() {
-  document.getElementById('reward-popup').classList.remove('show');
-  renderPlan();
-  renderStickerCollection();
-}
+    function toggleTask(i) {
+      const tasks = getTasks(me, currentDate);
+      tasks[i].done = !tasks[i].done;
+      saveTasks(me, currentDate, tasks);
 
-// ===== LETTERS =====
-function renderLetters() {
-  const intro = document.getElementById('letters-intro-box');
-  const isKid = me === 'kid';
+      // Check if all done
+      const total = tasks.length;
+      const done = tasks.filter(t => t.done).length;
+      renderPlan();
 
-  intro.className = 'letters-intro' + (isKid ? ' kid-intro' : '');
-  intro.innerHTML = isKid
-    ? '💌 Ээжтэйгээ бичилцсэн захидлуудаа хоёулаа харж чадна. Дурсамж болж үлдэнэ!'
-    : '💌 Охинтойгоо бичилцсэн захидлуудаа хоёулаа харж чадна. Дурсамж болж үлдэнэ!';
+      if (total > 0 && done === total) {
+        // Give sticker!
+        setTimeout(() => {
+          const emoji = addSticker(me);
+          showReward(emoji);
+        }, 400);
+      }
+    }
 
-  const btn = document.getElementById('new-letter-btn');
-  btn.className = 'btn new-letter-btn' + (isKid ? ' kid-mode' : '');
+    function deleteTask(i) {
+      const tasks = getTasks(me, currentDate);
+      tasks.splice(i, 1);
+      saveTasks(me, currentDate, tasks);
+      renderPlan();
+    }
 
-  const letters = getLetters();
-  const grid = document.getElementById('letters-grid');
+    function showReward(emoji) {
+      document.getElementById('reward-emoji').textContent = emoji;
+      document.getElementById('reward-msg').textContent =
+        me === 'mom' ? 'Ээж маань бүх ажлаа хийж дуусгалаа! 💪' : 'Охин маань бүх ажлаа хийж дуусгалаа! 🌟';
+      document.getElementById('reward-popup').classList.add('show');
+      launchConfetti();
+    }
 
-  if (letters.length === 0) {
-    grid.innerHTML = '<div class="empty"><span>💌</span>Захидал байхгүй байна</div>';
-    return;
-  }
+    function closeReward() {
+      document.getElementById('reward-popup').classList.remove('show');
+      renderPlan();
+      renderStickerCollection();
+    }
 
-  grid.innerHTML = letters.map(l => {
-    return `
-      <div class="letter-card mine" onclick="readLetter(${l.id})">
+    // ===== LETTERS =====
+    function renderLetters() {
+      const intro = document.getElementById('letters-intro-box');
+      const isKid = me === 'kid';
+
+      intro.className = 'letters-intro' + (isKid ? ' kid-intro' : '');
+      intro.innerHTML = isKid
+        ? '💌 Ээжийн захидлууд зөвхөн чамд л харагдана. Чи ч гэсэн ээждээ захидал бичиж болно!'
+        : '💌 Охины захидлууд зөвхөн чамд л харагдана. Чи ч гэсэн охиндоо захидал бичиж болно!';
+
+      const btn = document.getElementById('new-letter-btn');
+      btn.className = 'btn new-letter-btn' + (isKid ? ' kid-mode' : '');
+
+      const letters = getLetters();
+      const grid = document.getElementById('letters-grid');
+
+      if (letters.length === 0) {
+        grid.innerHTML = '<div class="empty"><span>💌</span>Захидал байхгүй байна</div>';
+        return;
+      }
+
+      grid.innerHTML = letters.map(l => {
+        const isMine = l.to === me;
+        const canSee = isMine;
+        return `
+      <div class="letter-card${isMine ? ' mine' : ''}" onclick="${isMine ? 'readLetter(' + l.id + ')' : 'alert(\"Энэ захидал чинийх биш 🔒\")'}">
         <div class="letter-from">${l.from === 'mom' ? '👩 Ээжээс' : '👧 Охиноос'} → ${l.to === 'mom' ? '👩 Ээжид' : '👧 Охинд'}</div>
         <div class="letter-preview">${l.title || l.body.slice(0, 40)}</div>
-        <div class="letter-date">${new Date(l.id).toLocaleDateString('mn-MN', {month:'short', day:'numeric'})}</div>
+        <div class="letter-date">${new Date(l.id).toLocaleDateString('mn-MN', { month: 'short', day: 'numeric' })}</div>
+        <button class="btn-delete" id="letter-delete-btn" onclick="event.stopPropagation(); deleteLetter(${l.id})" >Устгах 💌</button>
       </div>
     `;
-  }).join('');
-}
+      }).join('');
+    }
 
-function openLetterModal() {
-  document.getElementById('letter-title-inp').value = '';
-  document.getElementById('letter-body').value = '';
+    function deleteLetter(id) {
+      if (!confirm('Захидлыг устгах уу?')) return;
+      const letters = getLetters().filter(l => l.id !== id);
+      saveLetters(letters);
+      renderLetters();
+    }
 
-  const isKid = me === 'kid';
-  document.getElementById('letter-modal-title').textContent = isKid ? '💌 Ээждээ захидал бичих' : '💌 Охиндоо захидал бичих';
-  document.getElementById('letter-to-label').textContent = isKid ? 'Ээждээ хэлэх үг:' : 'Охиндоо хэлэх үг:';
-  document.getElementById('letter-body').className = isKid ? 'k' : '';
-  document.getElementById('letter-title-inp').className = isKid ? 'k' : '';
-  document.getElementById('letter-save-btn').className = 'btn btn-save' + (isKid ? ' k' : '');
 
-  document.getElementById('letter-overlay').classList.add('open');
-}
+    function deleteMemory(id) {
+      if (!confirm('Дурсамжийг устгах уу?')) return;
+      const memories = getMemories().filter(m => m.id !== id);
+      saveMemories(memories);
+      renderMemories();
+    }
 
-function saveLetter() {
-  const title = document.getElementById('letter-title-inp').value.trim();
-  const body = document.getElementById('letter-body').value.trim();
-  if (!body) return;
+    function openLetterModal() {
+      document.getElementById('letter-title-inp').value = '';
+      document.getElementById('letter-body').value = '';
 
-  const letters = getLetters();
-  letters.push({
-    id: Date.now(),
-    from: me,
-    to: me === 'mom' ? 'kid' : 'mom',
-    title: title || body.slice(0, 30) + '...',
-    body
-  });
-  saveLetters(letters);
-  closeOverlay('letter-overlay');
-  renderLetters();
-}
+      const isKid = me === 'kid';
+      document.getElementById('letter-modal-title').textContent = isKid ? '💌 Ээждээ захидал бичих' : '💌 Охиндоо захидал бичих';
+      document.getElementById('letter-to-label').textContent = isKid ? 'Ээждээ хэлэх үг:' : 'Охиндоо хэлэх үг:';
+      document.getElementById('letter-body').className = isKid ? 'k' : '';
+      document.getElementById('letter-title-inp').className = isKid ? 'k' : '';
+      document.getElementById('letter-save-btn').className = 'btn btn-save' + (isKid ? ' k' : '');
 
-function readLetter(id) {
-  const letter = getLetters().find(l => l.id === id);
-  if (!letter) return;
-  document.getElementById('read-title').textContent = '💌 ' + letter.title;
-  document.getElementById('read-body').textContent = letter.body;
-  document.getElementById('read-meta').textContent =
-    (letter.from === 'mom' ? '👩 Ээж' : '👧 Охин') + ' • ' +
-    new Date(letter.id).toLocaleDateString('mn-MN', {year:'numeric', month:'long', day:'numeric'});
-  document.getElementById('read-overlay').classList.add('open');
-}
+      document.getElementById('letter-overlay').classList.add('open');
+    }
 
-// ===== MEMORIES =====
-let pendingImgData = null;
+    function saveLetter() {
+      const title = document.getElementById('letter-title-inp').value.trim();
+      const body = document.getElementById('letter-body').value.trim();
+      if (!body) return;
 
-function previewImg(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    pendingImgData = ev.target.result;
-    const prev = document.getElementById('img-preview');
-    prev.src = pendingImgData;
-    prev.style.display = 'block';
-    document.getElementById('upload-label').textContent = '✅ Зураг сонгогдлоо';
-  };
-  reader.readAsDataURL(file);
-}
+      const letters = getLetters();
+      letters.push({
+        id: Date.now(),
+        from: me,
+        to: me === 'mom' ? 'kid' : 'mom',
+        title: title || body.slice(0, 30) + '...',
+        body
+      });
+      saveLetters(letters);
+      closeOverlay('letter-overlay');
+      renderLetters();
+    }
 
-function clearImg() {
-  pendingImgData = null;
-  document.getElementById('img-preview').style.display = 'none';
-  document.getElementById('upload-label').textContent = '📷 Зураг сонгох';
-  document.getElementById('img-file').value = '';
-}
+    function readLetter(id) {
+      currentReadId = id;
+      const letter = getLetters().find(l => l.id === id);
+      if (!letter) return;
+      document.getElementById('read-title').textContent = '💌 ' + letter.title;
+      document.getElementById('read-body').textContent = letter.body;
+      document.getElementById('read-meta').textContent =
+        (letter.from === 'mom' ? '👩 Ээж' : '👧 Охин') + ' • ' +
+        new Date(letter.id).toLocaleDateString('mn-MN', { year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('read-overlay').classList.add('open');
+    }
 
-function renderMemories() {
-  const isKid = me === 'kid';
-  document.getElementById('add-mem-btn').className = 'btn add-memory-btn' + (isKid ? ' kid-mode' : '');
+    // ===== MEMORIES =====
+    let pendingImgData = null;
 
-  const memories = getMemories();
-  const grid = document.getElementById('memories-grid');
+    function previewImg(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        pendingImgData = ev.target.result;
+        const prev = document.getElementById('img-preview');
+        prev.src = pendingImgData;
+        prev.style.display = 'block';
+        document.getElementById('upload-label').textContent = '✅ Зураг сонгогдлоо';
+      };
+      reader.readAsDataURL(file);
+    }
 
-  if (memories.length === 0) {
-    grid.innerHTML = '<div class="empty"><span>🖼️</span>Дурсамж байхгүй байна</div>';
-    return;
-  }
+    function clearImg() {
+      pendingImgData = null;
+      document.getElementById('img-preview').style.display = 'none';
+      document.getElementById('upload-label').textContent = '📷 Зураг сонгох';
+      document.getElementById('img-file').value = '';
+    }
 
-  grid.innerHTML = memories.slice().reverse().map(m => `
-    <div class="memory-card">
-      <div class="memory-img">
-        ${m.img ? `<img src="${m.img}" alt="memory">` : '📸'}
-      </div>
-      <div class="memory-body">
-        <div class="memory-text">${m.text}</div>
-        <div class="memory-meta">
-          <span>${m.author === 'mom' ? '👩 Ээж' : '👧 Охин'}</span>
-          <span>${new Date(m.id).toLocaleDateString('mn-MN', {month:'short', day:'numeric'})}</span>
+    function renderMemories() {
+      const isKid = me === 'kid';
+      document.getElementById('add-mem-btn').className = 'btn add-memory-btn' + (isKid ? ' kid-mode' : '');
+
+      const memories = getMemories();
+      const grid = document.getElementById('memories-grid');
+
+      if (memories.length === 0) {
+        grid.innerHTML = '<div class="empty"><span>🖼️</span>Дурсамж байхгүй байна</div>';
+        return;
+      }
+
+     grid.innerHTML = memories.slice().reverse().map(m => `
+      <div class="memory-card" style="position:relative;">
+        <button class="btn-delete" onclick="deleteMemory(${m.id})" style="position:absolute; top:8px; right:8px; z-index:10;">🗑️</button>
+        <div class="memory-img">
+          ${m.img ? '<img src="' + m.img + '" alt="memory">' : '📸'}
+        </div>
+        <div class="memory-body">
+          <div class="memory-text">${m.text}</div>
+          <div class="memory-meta">
+            <span>${m.author === 'mom' ? '👩 Ээж' : '👧 Охин'}</span>
+            <span>${new Date(m.id).toLocaleDateString('mn-MN', { month: 'short', day: 'numeric' })}</span>
+          </div>
         </div>
       </div>
-    </div>
-  `).join('');
-}
+    `).join('');
+    }
 
-function openMemoryModal() {
-  clearImg();
-  document.getElementById('mem-text').value = '';
-  const isKid = me === 'kid';
-  document.getElementById('mem-modal-title').textContent = isKid ? '📸 Охины дурсамж' : '📸 Ээжийн дурсамж';
-  document.getElementById('mem-text').className = isKid ? 'k' : '';
-  document.getElementById('upload-area').className = 'img-upload-area' + (isKid ? ' k' : '');
-  document.getElementById('mem-save-btn').className = 'btn btn-save' + (isKid ? ' k' : '');
-  document.getElementById('memory-overlay').classList.add('open');
-}
+    function openMemoryModal() {
+      clearImg();
+      document.getElementById('mem-text').value = '';
+      const isKid = me === 'kid';
+      document.getElementById('mem-modal-title').textContent = isKid ? '📸 Охины дурсамж' : '📸 Ээжийн дурсамж';
+      document.getElementById('mem-text').className = isKid ? 'k' : '';
+      document.getElementById('upload-area').className = 'img-upload-area' + (isKid ? ' k' : '');
+      document.getElementById('mem-save-btn').className = 'btn btn-save' + (isKid ? ' k' : '');
+      document.getElementById('memory-overlay').classList.add('open');
+    }
 
-function saveMemory() {
-  const text = document.getElementById('mem-text').value.trim();
-  if (!text && !pendingImgData) return;
-  const memories = getMemories();
-  memories.push({ id: Date.now(), author: me, text, img: pendingImgData });
-  saveMemories(memories);
-  closeOverlay('memory-overlay');
-  clearImg();
-  renderMemories();
-}
+    function saveMemory() {
+      const text = document.getElementById('mem-text').value.trim();
+      if (!text && !pendingImgData) return;
+      const memories = getMemories();
+      memories.push({ id: Date.now(), author: me, text, img: pendingImgData });
+      saveMemories(memories);
+      closeOverlay('memory-overlay');
+      clearImg();
+      renderMemories();
+    }
 
-// ===== STICKER COLLECTION =====
-function renderStickerCollection() {
-  const stickers = getStickers(me);
-  const wall = document.getElementById('sticker-collection-wall');
-  const stats = document.getElementById('sticker-stats');
+    // ===== STICKER COLLECTION =====
+    function renderStickerCollection() {
+      const stickers = getStickers(me);
+      const wall = document.getElementById('sticker-collection-wall');
+      const stats = document.getElementById('sticker-stats');
 
-  stats.textContent = `Нийт ${stickers.length} стикер цуглуулсан байна 🎉`;
+      stats.textContent = `Нийт ${stickers.length} стикер цуглуулсан байна 🎉`;
 
-  if (stickers.length === 0) {
-    wall.innerHTML = '<span style="color:#c0a0b0; font-size:1rem">Өдрийн бүх ажлаа дуусгавал стикер авна!</span>';
-    return;
-  }
+      if (stickers.length === 0) {
+        wall.innerHTML = '<span style="color:#c0a0b0; font-size:1rem">Өдрийн бүх ажлаа дуусгавал стикер авна!</span>';
+        return;
+      }
 
-  wall.innerHTML = stickers.map(s =>
-    `<span class="si" style="font-size:${s.big ? '2.6rem' : '1.8rem'}" title="${s.big ? '🏆 Бүх ажил дуусгасан!' : '✅ Ажил дуусгасан'}">${s.emoji}</span>`
-  ).join('');
-}
+      wall.innerHTML = stickers.map(s => `<span class="si">${s.emoji}</span>`).join('');
+    }
 
-// ===== HELPERS =====
-function closeOverlay(id) {
-  document.getElementById(id).classList.remove('open');
-}
+    // ===== HELPERS =====
+    function closeOverlay(id) {
+      document.getElementById(id).classList.remove('open');
+    }
 
-document.querySelectorAll('.overlay').forEach(o => {
-  o.addEventListener('click', function(e) {
-    if (e.target === this) this.classList.remove('open');
-  });
-});
-
-// ===== CONFETTI =====
-function launchConfetti() {
-  const canvas = document.getElementById('confetti');
-  canvas.style.display = 'block';
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-  const pieces = Array.from({length: 80}, () => ({
-    x: Math.random() * canvas.width,
-    y: -20,
-    r: Math.random() * 8 + 4,
-    d: Math.random() * 2 + 1,
-    color: ['#e8789a','#5ec4e0','#f5c842','#a8e6cf','#ffb3c6'][Math.floor(Math.random()*5)],
-    tilt: Math.random() * 10 - 5,
-    tiltSpeed: Math.random() * .1
-  }));
-
-  let frame = 0;
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    pieces.forEach(p => {
-      ctx.beginPath();
-      ctx.ellipse(p.x, p.y, p.r, p.r/2, p.tilt, 0, Math.PI*2);
-      ctx.fillStyle = p.color;
-      ctx.fill();
-      p.y += p.d;
-      p.x += Math.sin(frame * .01 + p.tilt) * .5;
-      p.tilt += p.tiltSpeed;
+    document.querySelectorAll('.overlay').forEach(o => {
+      o.addEventListener('click', function (e) {
+        if (e.target === this) this.classList.remove('open');
+      });
     });
-    frame++;
-    if (frame < 120) requestAnimationFrame(draw);
-    else { ctx.clearRect(0,0,canvas.width,canvas.height); canvas.style.display='none'; }
-  }
-  draw();
-}
-</script>
+
+    // ===== CONFETTI =====
+    function launchConfetti() {
+      const canvas = document.getElementById('confetti');
+      canvas.style.display = 'block';
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const pieces = Array.from({ length: 80 }, () => ({
+        x: Math.random() * canvas.width,
+        y: -20,
+        r: Math.random() * 8 + 4,
+        d: Math.random() * 2 + 1,
+        color: ['#e8789a', '#5ec4e0', '#f5c842', '#a8e6cf', '#ffb3c6'][Math.floor(Math.random() * 5)],
+        tilt: Math.random() * 10 - 5,
+        tiltSpeed: Math.random() * .1
+      }));
+
+      let frame = 0;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          ctx.beginPath();
+          ctx.ellipse(p.x, p.y, p.r, p.r / 2, p.tilt, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+          p.y += p.d;
+          p.x += Math.sin(frame * .01 + p.tilt) * .5;
+          p.tilt += p.tiltSpeed;
+        });
+        frame++;
+        if (frame < 120) requestAnimationFrame(draw);
+        else { ctx.clearRect(0, 0, canvas.width, canvas.height); canvas.style.display = 'none'; }
+      }
+      draw();
+    }
+  </script>
 </body>
+
 </html>
