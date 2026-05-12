@@ -68,7 +68,7 @@
     .login-h {
       font-family: 'Gaegu', cursive;
       font-size: 2.8rem;
-      color: var(--mom-d);
+      color: var(--kid-d);
       text-align: center;
       line-height: 1.2;
     }
@@ -1053,6 +1053,7 @@
       <button class="tab" id="t-letters" onclick="showSection('letters')">💌 Нандин үг</button>
       <button class="tab" id="t-memories" onclick="showSection('memories')">🖼️ Дурсамж</button>
       <button class="tab" id="t-stickers" onclick="showSection('stickers')">⭐ Миний стикер</button>
+      <button class="tab" id="t-profile" onclick="showSection('profile')">🦋 Хувийн мэдээлэл</button>
     </nav>
 
     <!-- PLAN -->
@@ -1089,6 +1090,12 @@
         <div class="sticker-board-title">🌟 Өнөөдрийн шагнал</div>
         <div class="sticker-wall" id="today-sticker-wall"></div>
       </div>
+
+
+      <div class="section" id="sec-profile">
+        <div class="sec-title">🦋 Хувийн мэдээлэл</div>
+        <div id="profile-box"></div>
+    </div>
     </div>
 
     <!-- LETTERS -->
@@ -1259,7 +1266,7 @@
 
     // ===== SECTIONS =====
     function showSection(sec) {
-      ['plan', 'letters', 'memories', 'stickers'].forEach(s => {
+      ['plan', 'letters', 'memories', 'stickers', 'profile'].forEach(s => {
         document.getElementById('sec-' + s).classList.remove('visible');
         const t = document.getElementById('t-' + s);
         t.className = 'tab';
@@ -1273,6 +1280,7 @@
       if (sec === 'letters') renderLetters();
       if (sec === 'memories') renderMemories();
       if (sec === 'stickers') renderStickerCollection();
+      if (sec === 'profile') renderProfile(); 
     }
 
     // ===== PLAN =====
@@ -1620,6 +1628,50 @@
       }
       draw();
     }
+
+
+
+    function renderProfile() {
+      const p = load('profile-' + me) || {};
+      document.getElementById('profile-box').innerHTML = `
+        <div class="plan-card" style="max-width:400px;">
+          <div style="text-align:center; margin-bottom:1.5rem;">
+            <img src="${p.img || (me === 'mom' ? 'eej.jpg' : 'ohin.jpg')}" 
+              style="width:100px;height:100px;border-radius:50%;object-fit:cover;">
+          </div>
+          <div class="field"><label>📝 Нэр, хоч</label>
+            <input type="text" value="${p.name || ''}" id="p-name" placeholder="Нэрээ бич...">
+          </div>
+          <div class="field"><label>🎂 Төрсөн өдөр</label>
+            <input type="date" value="${p.birth || ''}" id="p-birth">
+          </div>
+          <div class="field"><label>💌 Bio</label>
+            <textarea id="p-bio" rows="2" placeholder="Өөрийгөө танилцуул...">${p.bio || ''}</textarea>
+          </div>
+          <div class="field"><label>📚 Дуртай хичээл</label>
+            <input type="text" value="${p.subject || ''}" id="p-subject" placeholder="Математик, Англи хэл...">
+          </div>
+          <div class="field"><label>🎮 Дуртай тоглоом</label>
+            <input type="text" value="${p.game || ''}" id="p-game" placeholder="Minecraft, Roblox...">
+          </div>
+          <button class="btn btn-save${me === 'kid' ? ' k' : ''}" onclick="saveProfile()" style="width:100%; margin-top:.5rem;">
+            Хадгалах 💾
+          </button>
+        </div>
+      `;
+  }
+
+  function saveProfile() {
+    const p = {
+      name: document.getElementById('p-name').value,
+      birth: document.getElementById('p-birth').value,
+      bio: document.getElementById('p-bio').value,
+      subject: document.getElementById('p-subject').value,
+      game: document.getElementById('p-game').value,
+    };
+    save('profile-' + me, p);
+    alert('Хадгалагдлаа! 🌸');
+  }
   </script>
 </body>
 
